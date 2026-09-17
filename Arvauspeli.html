@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Numeronarvauspeli</title>
+
+    <style>
+        /* CSS: Muuttujien, luokkien ja ID-tunnisteiden nimet kirjoitetaan englanniksi ja camelCase-muodossa, esimerkiksi guessInput ja gameMessage. */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2rem;
+            background-color: #f7f7f7;
+            color: #24c600;
+        }
+
+        main {
+            max-width: 32rem;
+            margin: 0 auto;
+            background: #fff;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 0 10px rgba(241, 3, 3, 0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        form {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        label {
+            font-weight: 600;
+        }
+
+        input,
+        button {
+            font-size: 1rem;
+            padding: 0.6rem 0.75rem;
+            border-radius: 0.4rem;
+        }
+
+        input {
+            border: 1px solid #cfcfcf;
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+            background-color: #ff0084;
+            color: #1eff00;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background-color: #2f3ed9;
+        }
+
+        #newGameButton {
+            background-color: #e8ebff;
+            color: #1a1f7a;
+        }
+
+        #newGameButton:hover {
+            background-color: #dfe3ff;
+        }
+
+        #gameMessage {
+            min-height: 1.5rem;  
+            margin-top: 1rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <h1>Arvaa seuraavanvuoden veroprosentti</h1>
+
+        <button id="newGameButton" type="button">Arvaa tulevan kumppanisi ikä</button>
+
+        <form id="guessForm" novalidate>
+            <label for="guessInput">Arvaa luku väliltä 1-100</label>
+            <input id="guessInput" type="number" min="1" max="100" required>
+            <button id="guessButton" type="submit">Arvaa</button>
+        </form>
+
+        <p id="gameMessage" role="status" aria-live="polite"></p>
+    </main>
+
+    <script>
+        
+
+        // Haetaan HTML-elementit querySelector-metodilla, jotta niitä voidaan käsitellä JavaScriptillä.
+        const newGameButton = document.querySelector("#newGameButton");
+        const guessForm = document.querySelector("#guessForm");
+        const guessInput = document.querySelector("#guessInput");
+        const gameMessage = document.querySelector("#gameMessage");
+
+        // secretNumber tallentaa tietokoneen arpomaan oikean numeron.
+        // guessCount pitää kirjaa siitä, kuinka monta arvausta käyttäjä on tehnyt.
+        let secretNumber = 0;
+        let guessCount = 0;
+
+        // Aloitetaan uusi peli ja arvotaan satunnainen numero väliltä 1-100.
+        function startNewGame() {
+            // Math.random() arpoo desimaaliluvun väliltä 0-1.
+            // Math.floor() pyöristää luvun alaspäin kokonaisluvuksi.
+            // +1 muuttaa arvonnan välille 1-100.
+            secretNumber = Math.floor(Math.random() * 100) + 1;
+
+            // Nollataan aikaisemman pelin arvausten määrä.
+            guessCount = 0;
+
+            // Tyhjennetään käyttäjän syöttämä arvaus.
+            guessInput.value = "";
+
+            // Tyhjennetään edellisen pelin viesti.
+            gameMessage.textContent = "";
+
+            // Siirretään kohdistus syöttökenttään, jotta käyttäjä voi aloittaa arvauksen heti.
+            guessInput.focus();
+        }
+
+        // Käynnistetään uusi peli heti sivun latauduttua.
+        startNewGame();
+
+        // Uuden pelin aloitus painikkeesta.
+        // addEventListener kuuntelee painikkeen klikkausta ja suorittaa startNewGame-funktion.
+        newGameButton.addEventListener("click", function () {
+            startNewGame();
+        });
+
+        // Arvauslomake käsittelee käyttäjän syötteen ja vertaa sitä arvottuun numeroon.
+        // submit-tapahtuma suoritetaan, kun käyttäjä painaa Arvaa-painiketta.
+        guessForm.addEventListener("submit", function (event) {
+
+            // Estetään lomakkeen oletustoiminto eli sivun uudelleenlatautuminen.
+            event.preventDefault();
+
+            // Muutetaan input-kentän tekstimuotoinen arvo numeroksi.
+            const userGuess = Number(guessInput.value);
+
+            // Tarkistetaan, että käyttäjä on antanut kelvollisen numeron väliltä 1-100.
+            // checkValidity() tarkistaa HTML:n min-, max- ja required-ehtojen täyttymisen.
+            // Number.isNaN() tarkistaa, ettei arvo ole virheellinen numero.
+            if (!guessInput.checkValidity() || Number.isNaN(userGuess)) {
+                gameMessage.textContent = "Syötä luku väliltä 1-100.";
+                return;
+            }
+
+            // Kasvatetaan arvausten määrää yhdellä jokaisella hyväksytyllä arvauksella.
+            guessCount++;
+
+            // Verrataan käyttäjän arvausta tietokoneen arpomaan numeroon.
+            // Jos numerot ovat samat, käyttäjä arvasi oikein.
+            if (userGuess === secretNumber) {
+                gameMessage.textContent = `Arvasit ${guessCount} kertaa. Arvasit oikein. Luku oli ${secretNumber}.`;
+                return;
+            }
+
+            // Jos käyttäjän arvaus on pienempi kuin arvottu numero,
+            // ilmoitetaan käyttäjälle, että oikea luku on suurempi.
+            if (userGuess < secretNumber) {
+                gameMessage.textContent = `Arvasit ${guessCount} kertaa. Luku on suurempi.`;
+            } else {
+                // Muussa tapauksessa käyttäjän arvaus on suurempi kuin arvottu numero,
+                // joten käyttäjälle ilmoitetaan, että oikea luku on pienempi.
+                gameMessage.textContent = `Arvasit ${guessCount} kertaa. Luku on pienempi.`;
+            }
+
+            // Tyhjennetään syöttökenttä seuraavaa arvausta varten.
+            guessInput.value = "";
+
+            // Palautetaan kohdistus syöttökenttään seuraavaa arvausta varten.
+            guessInput.focus();
+        });
+    </script>
+</body>
+</html>
