@@ -1,0 +1,119 @@
+/*
+  Luokkien ja id-tunnisteiden nimet ovat englanniksi.
+  Moniosaiset nimet kirjoitetaan camelCase-merkinnällä.
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Stalinist+One&display=swap');
+
+/* Sivustolla käytettävät värit. */
+:root {
+  --backgroundColor: #0d9cb2;
+  --panelColor: #1d1d1d;
+  --inputColor: #222222;
+  --textColor: #f2f2f2;
+  --accentColor: #b7c7ff;
+  --borderColor: #555555;
+}
+
+/* Elementtien leveydet sisältävät myös reunat ja täytteet. */
+* {
+  box-sizing: border-box;
+}
+
+/* Sivun perusasetukset. */
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 24px;
+  background-color: var(--backgroundColor);
+  background-image: url("Codex Image 17 Sept 2026, 12_44_57.png");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: var(--textColor);
+  font-family: Arial, sans-serif;
+}
+
+/* Pelin pääalue. */
+.container {
+  width: min(100%, 600px);
+  margin: 0 auto;
+  padding: 24px;
+  background-color: rgba(29, 29, 29, 0.85);
+  border-radius: 12px;
+}
+
+/* Pääotsikko. */
+h1 {
+  margin-top: 0;
+  text-align: center;
+  font-family: "Stalinist One", cursive;
+  padding: 20px;
+  font-size: 1.5rem;
+}
+
+/* Pelin eri osiot. */
+section {
+  margin-top: 24px;
+  padding-top: 8px;
+  border-top: 1px solid var(--borderColor);
+}
+
+/* Syöttökenttien otsikot. */
+label {
+  display: block;
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+/* Syöttökenttien ja painikkeiden yhteiset asetukset. */
+input,
+button {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px;
+  font: inherit;
+  border-radius: 6px;
+}
+
+/* Syöttökentät. */
+input {
+  border: 1px solid var(--borderColor);
+  background-color: var(--inputColor);
+  color: var(--textColor);
+}
+
+/* Painikkeet. */
+button {
+  border: 0;
+  background-color: var(--accentColor);
+  color: #111111;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Käytöstä poistetut syöttökentät ja painikkeet. */
+button:disabled,
+input:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* Arvaushistorian rivit. */
+li {
+  margin-bottom: 8px;
+}
+
+/* Pistetaulukko. */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Pistetaulukon solut. */
+th,
+td {
+  padding: 10px;
+  border: 1px solid var(--borderColor);
+  text-align: left;
+}
